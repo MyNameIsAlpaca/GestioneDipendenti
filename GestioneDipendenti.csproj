@@ -8,6 +8,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="NLog" Version="5.2.5" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Reference Include="UtilityLib">
       <HintPath>..\UtilityLib\bin\Debug\net7.0\UtilityLib.dll</HintPath>
     </Reference>

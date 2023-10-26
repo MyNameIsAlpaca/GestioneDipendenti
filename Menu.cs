@@ -17,17 +17,51 @@ namespace GestioneDipendenti
 
             EmployeesList employeesList = new EmployeesList();
 
-            employeesList.fillListEmployeersTxt();
-
             EmployeesActivity employeesActivity = new EmployeesActivity();
-
-            employeesActivity.fillListActivityTxt();
 
             bool close = false;
 
             while(!close)
             {
                 utility.titleStyle("Benvenuto");
+
+                Console.WriteLine("Scegli cosa vuoi fare\n1) Importa dati\n2) Visualizza dati importati\n3) Seleziona dati speicifici\n4) Serializza tutti i dati in JSON\n5) Esci");
+
+                string userChoose = Console.ReadLine();
+
+                switch (userChoose)
+                {
+                    case "1":
+                        Console.Clear();
+                        utility.titleStyle("Importazione dati");
+                        Console.WriteLine("Importazione in corso...");
+                        employeesList.fillListEmployeersTxt();
+                        employeesActivity.fillListActivityTxt();
+                        
+                        break;
+
+                    case "2":
+                        Console.Clear();
+                        utility.titleStyle("Visualizzazione Dati");
+                        break;
+
+                    case "3":
+                        Console.Clear();
+                        utility.titleStyle("Selezione dati");
+                        break;
+                    case "4":
+                        Console.Clear();
+                        utility.titleStyle("Serializzazione dati");
+                        break;
+                    case "5":
+                        Console.Clear();
+                        close = true;
+                        break;
+                    default:
+                        Console.Clear();
+                        utility.errorStyle("Scegli un'opzione valida");
+                        break;
+                }
 
             }
 
