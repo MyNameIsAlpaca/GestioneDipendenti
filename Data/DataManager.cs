@@ -16,7 +16,7 @@ namespace GestioneDipendenti.Data
         Utility utility = new Utility();
         bool close = false;
 
-        public void showDataImported(List<Employees> employeesList, List<Activity> activityList)
+        public void showDataImported(List<Employees> employeesList, List<ActivityEmp> activityList)
         {
             while(!close)
             {
@@ -27,18 +27,39 @@ namespace GestioneDipendenti.Data
                 {
                     case "1":
                         Console.Clear();
-                        foreach(Employees employee in employeesList)
+                        if(employeesList.Count != 0)
                         {
-                            Console.WriteLine($"Matricola: {employee.EmployeesId}, Nome: {employee.FirstName}, Cognome: {employee.LastName}, Ruolo: {employee.Role}, Reparto: {employee.Department}, Indirizzo: {employee.Address} {employee.City} {employee.Province} {employee.Cap}, Età: {employee.Age}, Telefono: {employee.PhoneNumber}\n");
+                            foreach(Employees employee in employeesList)
+                            {
+                                Console.WriteLine($"Matricola: {employee.EmployeesId}, Nome: {employee.FirstName}, Cognome: {employee.LastName}, Ruolo: {employee.Role}, Reparto: {employee.Department}, Indirizzo: {employee.Address} {employee.City} {employee.Province} {employee.Cap}, Età: {employee.Age}, Telefono: {employee.PhoneNumber}\n");
+                            }
+                            Console.ReadLine();
+                            Console.Clear();
                         }
-                        Console.ReadLine();
-                        Console.Clear();
+                        else
+                        {
+                            utility.errorStyle("Nessun dato importato");
+                            Console.ReadLine();
+                            Console.Clear();
+                        }
                         break;
                     case "2":
                         Console.Clear();
-                        Console.WriteLine("Dati attività");
-                        Console.ReadLine();
-                        Console.Clear();
+                        if (activityList.Count != 0)
+                        {
+                            foreach(ActivityEmp activity in activityList)
+                            {
+                                Console.WriteLine($"Data: {activity.Date} - Matricola: {activity.EmployeerId} - Attività: {activity.Type} - Ore: {activity.Time}");
+                            }
+                            Console.ReadLine();
+                            Console.Clear();
+                        }
+                        else
+                        {
+                            utility.errorStyle("Nessun dato importato");
+                            Console.ReadLine();
+                            Console.Clear();
+                        }
                         break;
                     case "f":
                         close = true;

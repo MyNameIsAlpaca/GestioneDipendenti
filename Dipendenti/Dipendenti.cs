@@ -54,7 +54,7 @@ namespace GestioneDipendenti.Dipendenti
         }
     }
 
-    public class Activity
+    public class ActivityEmp
     {
         public string Date { get; set; }
 
@@ -64,7 +64,7 @@ namespace GestioneDipendenti.Dipendenti
 
         public string EmployeerId { get; set; }
 
-        public Activity (string date, string type, int time, string employeerId)
+        public ActivityEmp(string date, string type, int time, string employeerId)
         {
             this.Date = date;
             this.Type = type;

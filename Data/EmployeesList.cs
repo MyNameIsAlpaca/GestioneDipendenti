@@ -67,7 +67,7 @@ namespace GestioneDipendenti.Data
                                 {
                                     int phoneNumber = int.Parse(DataClean[9]);
 
-                                    Employees employees = new Employees(nameSplit[0], nameSplit[1], age , DataClean[5], DataClean[6], DataClean[7], cap, phoneNumber, DataClean[0], DataClean[4], DataClean[3]);
+                                    Employees employees = new Employees(nameSplit[0], nameSplit[1], age , DataClean[5], DataClean[6], DataClean[7], cap, phoneNumber, DataClean[0], DataClean[3], DataClean[2]);
 
                                     DataImported++;
 
@@ -125,7 +125,7 @@ namespace GestioneDipendenti.Data
 
     internal class EmployeesActivity
     {
-        public List<Activity> activityList = new List<Activity>();
+        public List<ActivityEmp> activityList = new List<ActivityEmp>();
 
         Utility utility = new Utility();
 
@@ -158,7 +158,7 @@ namespace GestioneDipendenti.Data
                         {
                             int hour = int.Parse(DataClean[2]);
 
-                            Activity activity = new Activity(DataClean[0], DataClean[1], hour, DataClean[3]);
+                            ActivityEmp activity = new ActivityEmp(DataClean[0], DataClean[1], hour, DataClean[3]);
 
                             DataImported++;
 

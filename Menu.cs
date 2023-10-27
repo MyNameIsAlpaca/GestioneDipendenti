@@ -16,6 +16,8 @@ namespace GestioneDipendenti
         public void openMenu()
         {
 
+            DataInfo dataInfo = new DataInfo();
+
             Utility utility = new UtilityLib.Utility();
 
             EmployeesList employeesList = new EmployeesList();
@@ -30,7 +32,7 @@ namespace GestioneDipendenti
             {
                 utility.titleStyle("Benvenuto");
 
-                Console.WriteLine("Scegli cosa vuoi fare\n1) Importa dati\n2) Visualizza dati importati\n3) Seleziona dati speicifici\n4) Serializza tutti i dati in JSON\n5) Esci");
+                Console.WriteLine("Scegli cosa vuoi fare\n1) Importa dati\n2) Visualizza dati importati\n3) Seleziona dati specifici\n4) Serializza tutti i dati in JSON\n5) Esci");
 
                 string userChoose = Console.ReadLine();
 
@@ -79,7 +81,67 @@ namespace GestioneDipendenti
 
                     case "3":
                         Console.Clear();
-                        utility.titleStyle("Selezione dati");
+                        while (!close)
+                        {
+                            utility.titleStyle("Dati specifici");
+                            Console.WriteLine("Quali dati vuoi consultare?\n1) Età media del personale\n2) Età media per reparto\n3) Totale ore lavoro per reparto\n4) Totale ore lavoro per nominativo\n5) Totale ore straordinarie\n6) Totale ore straordinarie per nominativo\n7) Totale ore ferie\n8) Totale ore ferie per nominativo\n9) Ore prefestive con data e nominativo\nOppure F per tornare indietro");
+                            userChoose = Console.ReadLine();
+                            switch (userChoose)
+                            {
+                                case "1":
+                                    Console.Clear();
+                                    dataInfo.avgAge(employeesList.employeesList, employeesActivity.activityList);
+
+                                    Console.ReadLine();
+                                    Console.Clear();
+                                    break;
+                                case "2":
+                                    Console.Clear();
+                                    dataInfo.avgAgeDep(employeesList.employeesList, employeesActivity.activityList);
+                                    Console.Clear();
+                                    break;
+                                case "3":
+                                    Console.Clear();
+                                    dataInfo.totalHourDep(employeesList.employeesList, employeesActivity.activityList);
+                                    Console.Clear();
+                                    break;
+                                case "4":
+                                    Console.Clear();
+                                    dataInfo.totalHourName(employeesList.employeesList, employeesActivity.activityList);
+                                    Console.Clear();
+                                    break;
+                                case "5":
+                                    Console.Clear();
+                                    dataInfo.totalExtra(employeesList.employeesList, employeesActivity.activityList);
+                                    Console.Clear();
+                                    break;
+                                case "6":
+                                    Console.Clear();
+                                    dataInfo.totalExtraName(employeesList.employeesList, employeesActivity.activityList);
+                                    Console.Clear();
+                                    break;
+                                case "7":
+                                    Console.Clear();
+                                    dataInfo.totalHourHolidays(employeesList.employeesList, employeesActivity.activityList);
+                                    Console.Clear();
+                                    break;
+                                case "8":
+                                    Console.Clear();
+                                    dataInfo.totalHourHolidaysName(employeesList.employeesList, employeesActivity.activityList);
+                                    Console.Clear();
+                                    break;
+                                case "9":
+                                    Console.Clear();
+                                    dataInfo.preHolidaysCalc(employeesList.employeesList, employeesActivity.activityList);
+                                    Console.Clear();
+                                    break;
+                                case "f":
+                                    Console.Clear();
+                                    close = true;
+                                    break;
+                            }
+                        }
+                        close = false;
                         break;
                     case "4":
                         Console.Clear();
