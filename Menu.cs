@@ -6,13 +6,16 @@ using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using UtilityLib;
+using NLog;
 
 namespace GestioneDipendenti
 {
     internal class Menu
     {
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public void openMenu()
         {
+
             Utility utility = new UtilityLib.Utility();
 
             EmployeesList employeesList = new EmployeesList();
@@ -33,11 +36,33 @@ namespace GestioneDipendenti
                 {
                     case "1":
                         Console.Clear();
-                        utility.titleStyle("Importazione dati");
-                        Console.WriteLine("Importazione in corso...");
-                        employeesList.fillListEmployeersTxt();
-                        employeesActivity.fillListActivityTxt();
-                        
+                        utility.titleStyle("Che tipo di dati vuoi importare?\n1) Dati dipendenti\n2) Dati attività\nOppure F per tornare indietro");
+                        userChoose = Console.ReadLine().ToLower();
+                        while (!close)
+                        {
+                            switch (userChoose)
+                            {
+                                case "1":
+                                    Console.Clear();
+                                    utility.titleStyle("Importazione dati");
+                                    Console.WriteLine("Importazione in corso...");
+                                    employeesList.fillListEmployeersTxt();
+                                    close = true;
+                                    break;
+                                case "2":
+                                    Console.Clear();
+                                    utility.titleStyle("Importazione dati");
+                                    Console.WriteLine("Importazione in corso...");
+                                    employeesActivity.fillListActivityTxt();
+                                    close = true;
+                                    break;
+                                case "f":
+                                    Console.Clear();
+                                    close = true;
+                                    break;
+                            }
+                        }
+                        close = false;
                         break;
 
                     case "2":
