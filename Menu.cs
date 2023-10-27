@@ -22,6 +22,8 @@ namespace GestioneDipendenti
 
             EmployeesActivity employeesActivity = new EmployeesActivity();
 
+            DataManager dataManager = new DataManager();
+
             bool close = false;
 
             while(!close)
@@ -36,10 +38,11 @@ namespace GestioneDipendenti
                 {
                     case "1":
                         Console.Clear();
-                        utility.titleStyle("Che tipo di dati vuoi importare?\n1) Dati dipendenti\n2) Dati attività\nOppure F per tornare indietro");
-                        userChoose = Console.ReadLine().ToLower();
                         while (!close)
                         {
+                        utility.titleStyle("Importazione dati");
+                        Console.WriteLine("Che tipo di dati vuoi importare?\n1) Dati dipendenti\n2) Dati attività\nOppure F per tornare indietro");
+                        userChoose = Console.ReadLine().ToLower();
                             switch (userChoose)
                             {
                                 case "1":
@@ -60,6 +63,10 @@ namespace GestioneDipendenti
                                     Console.Clear();
                                     close = true;
                                     break;
+                                default:
+                                    Console.Clear();
+                                    utility.errorStyle("Scegli un'opzione valida");
+                                    break;
                             }
                         }
                         close = false;
@@ -67,7 +74,7 @@ namespace GestioneDipendenti
 
                     case "2":
                         Console.Clear();
-                        utility.titleStyle("Visualizzazione Dati");
+                        dataManager.showDataImported(employeesList.employeesList, employeesActivity.activityList);
                         break;
 
                     case "3":

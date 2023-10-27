@@ -22,6 +22,7 @@ namespace GestioneDipendenti.Data
         Utility utility = new Utility();
         public void fillListEmployeersTxt()
         {
+            int DataImported = 0;
             try
             {
                 string relPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
@@ -40,6 +41,20 @@ namespace GestioneDipendenti.Data
 
                         string[] nameSplit = DataClean[1].Split(' ');
 
+                        if (nameSplit.Length == 3) {
+
+                        nameSplit[1] = nameSplit[1] + ' ' + nameSplit[2];
+                        
+                        }
+
+                        if (nameSplit.Length == 4)
+                        {
+
+                            nameSplit[1] = nameSplit[1] + ' ' + nameSplit[2] + ' ' + nameSplit[3];
+
+                        }
+
+
                         if (utility.testInt(DataClean[4]))
                         {
                             int age = int.Parse(DataClean[4]);
@@ -53,6 +68,8 @@ namespace GestioneDipendenti.Data
                                     int phoneNumber = int.Parse(DataClean[9]);
 
                                     Employees employees = new Employees(nameSplit[0], nameSplit[1], age , DataClean[5], DataClean[6], DataClean[7], cap, phoneNumber, DataClean[0], DataClean[4], DataClean[3]);
+
+                                    DataImported++;
 
                                     employeesList.Add(employees);
                                 }
@@ -75,7 +92,7 @@ namespace GestioneDipendenti.Data
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Importazione completata");
                         Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine($"Hai importato correttamente {employeesList.Count} dati");
+                        Console.WriteLine($"Hai importato correttamente {DataImported} dati");
                         Console.ReadLine();
                         Console.Clear();
                     }
@@ -118,6 +135,8 @@ namespace GestioneDipendenti.Data
 
         public void fillListActivityTxt()
         {
+            int DataImported = 0;
+
             string relPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             string filePath = Path.Combine(relPath, "DataEmployees", "EmployeesActivities.txt");
@@ -141,6 +160,8 @@ namespace GestioneDipendenti.Data
 
                             Activity activity = new Activity(DataClean[0], DataClean[1], hour, DataClean[3]);
 
+                            DataImported++;
+
                             activityList.Add(activity);
 
                         }
@@ -156,7 +177,7 @@ namespace GestioneDipendenti.Data
                         Console.ForegroundColor = ConsoleColor.Green;
                         Console.WriteLine("Importazione completata");
                         Console.ForegroundColor = ConsoleColor.White;
-                        Console.WriteLine($"Hai importato correttamente {activityList.Count} dati");
+                        Console.WriteLine($"Hai importato correttamente {DataImported} dati");
                         Console.ReadLine();
                         Console.Clear();
                     }
