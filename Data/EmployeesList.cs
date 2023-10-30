@@ -61,20 +61,11 @@ namespace GestioneDipendenti.Data
 
                             string cap = DataClean[8];
 
-                            if (utility.testInt(DataClean[9]))
-                            {
-                                int phoneNumber = int.Parse(DataClean[9]);
+                            Employees employees = new Employees(nameSplit[0], nameSplit[1], age , DataClean[5], DataClean[6], DataClean[7], cap, DataClean[9], DataClean[0], DataClean[3], DataClean[2]);
 
-                                Employees employees = new Employees(nameSplit[0], nameSplit[1], age , DataClean[5], DataClean[6], DataClean[7], cap, phoneNumber, DataClean[0], DataClean[3], DataClean[2]);
+                            DataImported++;
 
-                                DataImported++;
-
-                                employeesList.Add(employees);
-                            }
-                            else
-                            {
-
-                            }
+                            employeesList.Add(employees);
                         }
                         else
                         {

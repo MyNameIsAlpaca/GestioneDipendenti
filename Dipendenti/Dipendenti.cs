@@ -22,9 +22,9 @@ namespace GestioneDipendenti.Dipendenti
 
         public string Cap {  get; set; }
 
-        public int PhoneNumber { get; set; }
+        public string PhoneNumber { get; set; }
 
-        public Person(string firstName, string lastName, int age, string address, string city, string province, string cap, int phoneNumber)
+        public Person(string firstName, string lastName, int age, string address, string city, string province, string cap, string phoneNumber)
         {
             FirstName = firstName;
             LastName = lastName;
@@ -45,7 +45,7 @@ namespace GestioneDipendenti.Dipendenti
 
         public string Role { get; set; }
 
-        public Employees (string firstName, string lastName, int age, string address, string city, string province, string cap, int phoneNumber, string employeesId, string department, string role)
+        public Employees (string firstName, string lastName, int age, string address, string city, string province, string cap, string phoneNumber, string employeesId, string department, string role)
             : base(firstName, lastName, age, address, city, province, cap, phoneNumber)
         {
             EmployeesId = employeesId;
