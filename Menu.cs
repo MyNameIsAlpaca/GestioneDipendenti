@@ -26,13 +26,15 @@ namespace GestioneDipendenti
 
             DataManager dataManager = new DataManager();
 
+            EmployeerManager employeerManager = new EmployeerManager();
+
             bool close = false;
 
             while(!close)
             {
                 utility.titleStyle("Benvenuto");
 
-                Console.WriteLine("Scegli cosa vuoi fare\n1) Importa dati\n2) Visualizza dati importati\n3) Seleziona dati specifici\n4) Serializza tutti i dati in JSON\n5) Esci");
+                Console.WriteLine("Scegli cosa vuoi fare\n1) Importa dati\n2) Visualizza dati importati\n3) Seleziona dati specifici\n4) Gestione dipendenti\n5) Serializza tutti i dati in JSON\n6) Esci");
 
                 string userChoose = Console.ReadLine();
 
@@ -143,11 +145,45 @@ namespace GestioneDipendenti
                         }
                         close = false;
                         break;
+
                     case "4":
+                        Console.Clear();
+                        while (!close)
+                        {
+                            utility.titleStyle("Gestione dipendenti");
+                            Console.WriteLine("Cosa vuoi fare?\n1) Visualizza dipendente\n2) Modifica dipendente\n3) Elimina dipendente\n Oppure F per tornare indietro");
+                            switch (Console.ReadLine().ToLower())
+                            {
+                                case "1":
+                                    Console.Clear();
+                                    employeerManager.searchEmployee(employeesList.employeesList);
+                                    break;
+                                case "2":
+                                    Console.Clear();
+                                    employeerManager.editEmployee(employeesList.employeesList);
+                                    break;
+                                case "3":
+                                    Console.Clear();
+                                    employeerManager.deleteEmployee(employeesList.employeesList);
+                                    break;
+                                case "f":
+                                    Console.Clear();
+                                    close = true;
+                                        break;
+                                default:
+                                    Console.Clear();
+                                    utility.errorStyle("Scegli un'opzione valida");
+                                    break;
+
+                            }
+                        }
+                        close = false;
+                        break;
+                    case "5":
                         Console.Clear();
                         utility.titleStyle("Serializzazione dati");
                         break;
-                    case "5":
+                    case "6":
                         Console.Clear();
                         close = true;
                         break;
