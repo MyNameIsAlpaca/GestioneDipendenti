@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using UtilityLib;
 using NLog;
+using System.Data.SqlClient;
+using System.Configuration;
 
 namespace GestioneDipendenti
 {
@@ -15,6 +17,7 @@ namespace GestioneDipendenti
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
         public void openMenu()
         {
+            DbManager dbManager = new DbManager(ConfigurationManager.AppSettings["CnnDbString"]);
 
             DataInfo dataInfo = new DataInfo();
 
@@ -45,7 +48,7 @@ namespace GestioneDipendenti
                         while (!close)
                         {
                         utility.titleStyle("Importazione dati");
-                        Console.WriteLine("Che tipo di dati vuoi importare?\n1) Dati dipendenti\n2) Dati attività\nOppure F per tornare indietro");
+                        Console.WriteLine("Che tipo di dati vuoi importare?\n1) Dati dipendenti\n2) Dati attività\n3) Importa dati dipendente da database\n4) Importa dati attività da database\nOppure F per tornare indietro");
                         userChoose = Console.ReadLine().ToLower();
                             switch (userChoose)
                             {
@@ -60,8 +63,18 @@ namespace GestioneDipendenti
                                     Console.Clear();
                                     utility.titleStyle("Importazione dati");
                                     Console.WriteLine("Importazione in corso...");
-                                    employeesActivity.fillListActivityTxt();
+                                    employeesActivity.fillListActivityTxt(employeesList.employeesList);
                                     close = true;
+                                    break;
+                                case "3":
+                                    Console.Clear();
+                                    dbManager.fillEmployeesListWithDb(employeesList.employeesList);
+                                    Console.ReadLine();
+                                    break;
+                                case "4":
+                                    Console.Clear();
+                                    Console.WriteLine("Import activity from db");
+                                    Console.ReadLine();
                                     break;
                                 case "f":
                                     Console.Clear();
@@ -86,6 +99,13 @@ namespace GestioneDipendenti
                         while (!close)
                         {
                             utility.titleStyle("Dati specifici");
+                            if(employeesList.employeesList.Count == 0 || employeesActivity.activityList.Count == 0)
+                            {
+                                utility.errorStyle("Non sono presenti abbastanza dati per avere dei dati specifici");
+                                Console.ReadLine();
+                                Console.Clear();
+                                break;
+                            }
                             Console.WriteLine("Quali dati vuoi consultare?\n1) Età media del personale\n2) Età media per reparto\n3) Totale ore lavoro per reparto\n4) Totale ore lavoro per nominativo\n5) Totale ore straordinarie\n6) Totale ore straordinarie per nominativo\n7) Totale ore ferie\n8) Totale ore ferie per nominativo\n9) Ore prefestive con data e nominativo\nOppure F per tornare indietro");
                             userChoose = Console.ReadLine();
                             switch (userChoose)
@@ -151,6 +171,13 @@ namespace GestioneDipendenti
                         while (!close)
                         {
                             utility.titleStyle("Gestione dipendenti");
+                            if(employeesList.employeesList.Count == 0)
+                            {
+                                utility.errorStyle("Nessun dipendente presente nel database");
+                                Console.ReadLine();
+                                Console.Clear();
+                                break;
+                            }
                             Console.WriteLine("Cosa vuoi fare?\n1) Visualizza dipendente\n2) Modifica dipendente\n3) Elimina dipendente\n Oppure F per tornare indietro");
                             switch (Console.ReadLine().ToLower())
                             {
@@ -182,6 +209,16 @@ namespace GestioneDipendenti
                     case "5":
                         Console.Clear();
                         utility.titleStyle("Serializzazione dati");
+                        if (employeesList.employeesList.Count == 0)
+                        {
+                            utility.errorStyle("Non sono presenti dati da serializzare");
+                            Console.ReadLine();
+                            Console.Clear();
+                            break;
+                        }
+                        dataManager.exportJson(employeesList.employeesList);
+                        Console.Clear();
+                        utility.successStyle("Esportazione completata");
                         break;
                     case "6":
                         Console.Clear();

@@ -1,11 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 using GestioneDipendenti.Dipendenti;
 using NLog;
 using UtilityLib;
+using Newtonsoft.Json;
 
 namespace GestioneDipendenti.Data
 {
@@ -72,6 +74,22 @@ namespace GestioneDipendenti.Data
                 }
             }
             close = false;
+        }
+
+        public void exportJson(List<Employees> employeesList)
+        {
+            string relPath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
+            string filePath = Path.Combine(relPath, "DataEmployees", "ExportedJson.txt");
+
+            using (StreamWriter file = File.CreateText(filePath))
+            {
+                JsonSerializer serializer = new JsonSerializer();
+
+                serializer.Formatting = Formatting.Indented;
+
+                serializer.Serialize(file, employeesList);
+            }
         }
     }
 }

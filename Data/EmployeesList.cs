@@ -2,6 +2,7 @@
 using NLog;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -41,39 +42,53 @@ namespace GestioneDipendenti.Data
 
                         string[] nameSplit = DataClean[1].Split(' ');
 
-                        if (nameSplit.Length == 3) {
+                        var EmployeesNeedAdd = employeesList.SingleOrDefault(r => r.EmployeesId.ToLower() == DataClean[0].ToLower());
 
-                        nameSplit[1] = nameSplit[1] + ' ' + nameSplit[2];
-                        
-                        }
 
-                        if (nameSplit.Length == 4)
+                        if(EmployeesNeedAdd != null)
                         {
-
-                            nameSplit[1] = nameSplit[1] + ' ' + nameSplit[2] + ' ' + nameSplit[3];
-
-                        }
-
-
-                        if (utility.testInt(DataClean[4]))
-                        {
-                            int age = int.Parse(DataClean[4]);
-
-                            string cap = DataClean[8];
-
-                            Employees employees = new Employees(nameSplit[0], nameSplit[1], age , DataClean[5], DataClean[6], DataClean[7], cap, DataClean[9], DataClean[0], DataClean[3], DataClean[2]);
-
-                            DataImported++;
-
-                            employeesList.Add(employees);
+                            Console.Clear();
+                            utility.errorStyle($"Il dipendente con matricola {DataClean[0]} è già presente nel database");
+                            Console.ReadLine();
                         }
                         else
                         {
+                            if (nameSplit.Length == 3) {
+
+                            nameSplit[1] = nameSplit[1] + ' ' + nameSplit[2];
+                        
+                            }
+
+                            if (nameSplit.Length == 4)
+                            {
+
+                                nameSplit[1] = nameSplit[1] + ' ' + nameSplit[2] + ' ' + nameSplit[3];
+
+                            }
+
+
+                            if (utility.testInt(DataClean[4]))
+                            {
+                                int age = int.Parse(DataClean[4]);
+
+                                string cap = DataClean[8];
+
+                                Employees employees = new Employees(nameSplit[0], nameSplit[1], age , DataClean[5], DataClean[6], DataClean[7], cap, DataClean[9], DataClean[0], DataClean[3], DataClean[2]);
+
+                                DataImported++;
+
+                                employeesList.Add(employees);
+                            }
+                            else
+                            {
+
+                            }
 
                         }
 
+
                     }
-                    if (employeesList.Count() > 0)
+                    if (DataImported > 0)
                     {
                         Logger.Info("Importazione dipendenti avvenuta");
                         Console.Clear();
@@ -121,7 +136,7 @@ namespace GestioneDipendenti.Data
 
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
-        public void fillListActivityTxt()
+        public void fillListActivityTxt(List<Employees> employeesList)
         {
             int DataImported = 0;
 
@@ -151,6 +166,14 @@ namespace GestioneDipendenti.Data
                             DataImported++;
 
                             activityList.Add(activity);
+
+                            foreach(var employees in employeesList)
+                            {
+                                if (employees.EmployeesId == activity.EmployeerId)
+                                {
+                                    employees.activityEmp.Add(activity);
+                                }
+                            }
 
                         }
                         else

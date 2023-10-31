@@ -24,13 +24,15 @@ namespace GestioneDipendenti.Data
             {
                 if(employee.EmployeesId.ToLower() == userSearch)
                 {
+                    Console.WriteLine("======================================================");
                     Console.WriteLine($"Id {employee.EmployeesId}\nNome: {employee.FirstName} {employee.LastName} - Età: {employee.Age} anni");
                     Console.WriteLine($"Ruolo: {employee.Role} - Reparto: {employee.Department}");
-                    Console.WriteLine($"Indirizzo: {employee.Address}, {employee.City}, {employee.Province} ({employee.Cap})\n");
+                    Console.WriteLine($"Indirizzo: {employee.Address}, {employee.City}, {employee.Province} ({employee.Cap})");
                     Console.ForegroundColor = ConsoleColor.Green;
                     Console.WriteLine("Informazioni di contatto:");
                     Console.ForegroundColor = ConsoleColor.White;
                     Console.WriteLine($"Numero di telefono: {employee.PhoneNumber}");
+                    Console.WriteLine("======================================================");
                     found = true;
                 }
             }
@@ -184,10 +186,15 @@ namespace GestioneDipendenti.Data
             {
                 if (employee.EmployeesId.ToLower() == userSearch)
                 {
-                    Console.WriteLine($"Id {employee.EmployeesId}\nNome: {employee.FirstName} {employee.LastName} - Età: {employee.Age}");
+                    Console.WriteLine("======================================================");
+                    Console.WriteLine($"Id {employee.EmployeesId}\nNome: {employee.FirstName} {employee.LastName} - Età: {employee.Age} anni");
                     Console.WriteLine($"Ruolo: {employee.Role} - Reparto: {employee.Department}");
-                    Console.WriteLine($"Indirizzo: {employee.Address}, {employee.City}, {employee.Province} ({employee.Cap})\n");
+                    Console.WriteLine($"Indirizzo: {employee.Address}, {employee.City}, {employee.Province} ({employee.Cap})");
                     Console.ForegroundColor = ConsoleColor.Green;
+                    Console.WriteLine("Informazioni di contatto:");
+                    Console.ForegroundColor = ConsoleColor.White;
+                    Console.WriteLine($"Numero di telefono: {employee.PhoneNumber}");
+                    Console.WriteLine("======================================================");
                     found = true;
                 }
             }

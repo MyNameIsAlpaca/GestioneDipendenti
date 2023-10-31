@@ -45,6 +45,8 @@ namespace GestioneDipendenti.Dipendenti
 
         public string Role { get; set; }
 
+        public List<ActivityEmp> activityEmp { get; set; } = new List<ActivityEmp>();
+
         public Employees (string firstName, string lastName, int age, string address, string city, string province, string cap, string phoneNumber, string employeesId, string department, string role)
             : base(firstName, lastName, age, address, city, province, cap, phoneNumber)
         {
