@@ -140,7 +140,65 @@ namespace GestioneDipendenti.Data
             } 
             catch(Exception ex)
             {
-                Logger.Error(ex);
+                Logger.Error($"L'importazione del db ha riscontrato un errore: {ex}");
+                throw;
+            }
+        }
+
+        public void fillActivityListWithDb(List<Employees> employeesList, List<ActivityEmp> activityList)
+        {
+            try
+            {
+                CheckDb();
+                using(SqlCommand  cmd = new SqlCommand())
+                {
+                    int successImport = 0;
+
+                    sqlCommand.CommandText = "select * from [dbo].AttivitaDipendente";
+
+                    sqlCommand.Connection = sqlCnn;
+
+                    using(SqlDataReader reader =  sqlCommand.ExecuteReader())
+                    {
+                        while(reader.Read())
+                        {
+                            string matricola = reader["Matricola"].ToString();
+                            string data = reader["DataAttivita"].ToString();
+                            string attivita = reader["Attivita"].ToString();
+                            string hourString = reader["Ore"].ToString();
+                            int hour = int.Parse(hourString);
+
+                            ActivityEmp activity = new ActivityEmp(data, attivita, hour, matricola);
+
+                            activityList.Add(activity);
+
+                            foreach (var employees in employeesList)
+                            {
+                                if (employees.EmployeesId == activity.EmployeerId)
+                                {
+                                    employees.activityEmp.Add(activity);
+                                }
+                            }
+
+                            successImport++;
+                        }
+                    }
+                    if (successImport > 0)
+                    {
+                        Console.Clear();
+                        utility.successStyle($"Hai importato correttamente {successImport} attivita");
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        utility.errorStyle("Non hai importato nessuna attivita");
+                    }
+
+                }
+            }
+            catch (Exception ex)
+            {
+                Logger.Error($"L'importazione del db ha riscontrato un errore: {ex}");
                 throw;
             }
         }

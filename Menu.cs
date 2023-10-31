@@ -73,7 +73,7 @@ namespace GestioneDipendenti
                                     break;
                                 case "4":
                                     Console.Clear();
-                                    Console.WriteLine("Import activity from db");
+                                    dbManager.fillActivityListWithDb(employeesList.employeesList, employeesActivity.activityList);
                                     Console.ReadLine();
                                     break;
                                 case "f":
