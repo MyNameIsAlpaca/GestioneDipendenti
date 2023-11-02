@@ -2,15 +2,20 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Channels;
 using System.Threading.Tasks;
 using UtilityLib;
+using System.Configuration;
+
 
 namespace GestioneDipendenti.Data
 {
     internal class EmployeerManager
     {
+            DbManager dbManager = new DbManager(ConfigurationManager.AppSettings["CnnDbString"]);
+
         Utility utility = new UtilityLib.Utility();
 
         public void searchEmployee(List<Employees> employeesList)
@@ -43,6 +48,157 @@ namespace GestioneDipendenti.Data
             }
             Console.ReadLine();
             Console.Clear();
+        }
+
+        public void editEmployeeInDb()
+        {
+            bool close = false;
+            Console.Clear();
+            utility.titleStyle("Modifica dipendente");
+            while (!close)
+            {
+                Console.WriteLine("Inserisci la matricola del dipendente da modificare\nOppure F per uscire");
+                string matricola = Console.ReadLine().ToUpper();
+                if (matricola == "F")
+                {
+                    close = true;
+                    break;
+                }
+                else if (matricola.Length != 4)
+                {
+                    Console.Clear();
+                    utility.errorStyle("Inserisci una matricola valida");
+                }
+                else
+                {
+                    if (dbManager.checkEmployeeInDb(matricola))
+                    {
+                        Console.Clear();
+                        utility.titleStyle($"Modifica dipendente {matricola}");
+                        Console.WriteLine("Quale campo desideri modificare?\n1) Nome\n2) Età\n3) Domicilio\n4) Ruolo\n5) Reparto\n6) Numero di telefono");
+                        while (!close)
+                        {
+                            switch (Console.ReadLine())
+                            {
+                                case "1":
+                                    Console.Clear();
+                                    Console.WriteLine("Inserisci il nome aggiornato");
+                                    string name = Console.ReadLine();
+                                    dbManager.updateEmployeesInDb(matricola, name, "Nominativo");
+                                    Console.Clear();
+                                    utility.successStyle("Nome dipendente aggiornato con successo");
+                                    close = true;
+                                    break;
+                                case "2":
+                                    Console.Clear();
+                                    Console.WriteLine("Inserisci l'età aggiornato");
+                                    string age = Console.ReadLine();
+                                    dbManager.updateEmployeesInDb(matricola, age, "Eta");
+                                    Console.Clear();
+                                    utility.successStyle("Età del dipendente aggiornata con successo");
+                                    close = true;
+                                    break;
+                                case "3":
+                                    Console.Clear();
+                                    while (!close)
+                                    {
+                                        Console.WriteLine("Quale parte dell'domicilio desideri aggiornare?\n1) Indirizzo\n2) Città\n3) Provincia\n4) Cap");
+                                        switch (Console.ReadLine())
+                                        {
+                                            case "1":
+                                                Console.Clear();
+                                                Console.WriteLine("Inserisci l'indirizzo aggiornato");
+                                                string address = Console.ReadLine();
+                                                dbManager.updateEmployeesInDb(matricola, address, "Indirizzo");
+                                                close = true;
+                                                Console.Clear();
+                                                utility.successStyle("Indirizzo aggiornato con successo");
+                                                break;
+                                            case "2":
+                                                Console.Clear();
+                                                Console.WriteLine("Inserisci la città aggiornato");
+                                                string city = Console.ReadLine();
+                                                dbManager.updateEmployeesInDb(matricola, city, "Citta");
+                                                close = true;
+                                                Console.Clear();
+                                                utility.successStyle("Città aggiornata con successo");
+                                                break;
+                                            case "3":
+                                                Console.Clear();
+                                                Console.WriteLine("Inserisci la provincia aggiornata");
+                                                string province = Console.ReadLine();
+                                                dbManager.updateEmployeesInDb(matricola, province, "Provincia");
+                                                close = true;
+                                                Console.Clear();
+                                                utility.successStyle("Provincia aggiornata con successo");
+                                                break;
+                                            case "4":
+                                                Console.Clear();
+                                                Console.WriteLine("Inserisci il cap aggiornato");
+                                                string cap = Console.ReadLine();
+                                                dbManager.updateEmployeesInDb(matricola, cap, "Cap");
+                                                close = true;
+                                                Console.Clear();
+                                                utility.successStyle("Cap aggiornato con successo");
+                                                break;
+                                            default:
+                                                Console.Clear();
+                                                utility.errorStyle("Scegli un'opzione valida");
+                                                break;
+                                        }
+                                    }
+                                    break;
+                                case "4":
+                                    Console.Clear();
+                                    Console.WriteLine("Inserisci il ruolo aggiornato");
+                                    string ruolo = Console.ReadLine();
+                                    dbManager.updateEmployeesInDb(matricola, ruolo, "Ruolo");
+                                    Console.Clear();
+                                    utility.successStyle("Ruolo dipendente aggiornato con successo");
+                                    close = true;
+                                    break;
+                                case "5":
+                                    Console.Clear();
+                                    Console.WriteLine("Inserisci il reparto aggiornato");
+                                    string reparto = Console.ReadLine();
+                                    dbManager.updateEmployeesInDb(matricola, reparto, "Reparto");
+                                    Console.Clear();
+                                    utility.successStyle("Reparto dipendente aggiornato con successo");
+                                    close = true;
+                                    break;
+                                case "6":
+                                    Console.Clear();
+                                    Console.WriteLine("Inserisci il numero di telefono aggiornato");
+                                    while (!close)
+                                    {
+                                        string numero = Console.ReadLine();
+                                        if (!utility.testInt(numero) || numero.Length < 10 || numero.Length > 13)
+                                        {
+                                            Console.Clear();
+                                            utility.errorStyle("Inserisci un numero valido");
+                                        }
+                                        else
+                                        {
+                                            dbManager.updateEmployeesInDb(matricola, numero, "Telefono");
+                                            Console.Clear();
+                                            utility.successStyle("Numero di telefono del dipendente aggiornato con successo");
+                                            close = true;
+                                        }
+                                    }
+                                    break;
+                                default:
+                                    utility.errorStyle("Scegli un'opzione valida");
+                                    break;
+                            }
+                        }
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        utility.errorStyle("Nessun dipendente con quella matricola trovato nel database");
+                    }
+                }
+            }
         }
         public void editEmployee(List<Employees> employeesList)
         {

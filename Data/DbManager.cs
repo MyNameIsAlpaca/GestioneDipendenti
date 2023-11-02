@@ -8,12 +8,17 @@ using GestioneDipendenti.Dipendenti;
 using System.Configuration;
 using NLog;
 using UtilityLib;
+using NLog.Fluent;
+using System.Transactions;
+using System.Data.Common;
 
 namespace GestioneDipendenti.Data
 {
     internal class DbManager
     {
+
         Utility utility = new Utility();
+
         private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
 
         private SqlConnection sqlCnn = new();
@@ -31,9 +36,12 @@ namespace GestioneDipendenti.Data
                 IsDbValid = true;
                 sqlCnn.Close();
             }
-            catch 
+            catch (Exception ex)
             {
-                throw;
+
+                utility.errorStyle("Abbiamo riscontrato un problema con il database");
+                Console.WriteLine($"Errore: {ex}");
+                Logger.Error(ex);
             }
         }
 
@@ -55,7 +63,48 @@ namespace GestioneDipendenti.Data
             } 
             catch(Exception ex)
             {
-                throw;
+                utility.errorStyle("Abbiamo riscontrato un problema con il database");
+                Console.WriteLine($"Errore: {ex}");
+                Logger.Error(ex);
+            }
+        }
+
+        public bool checkEmployeeInDb(string matricola)
+        {
+            try
+            {
+                CheckDb();
+                using (SqlCommand cmd = new SqlCommand()) 
+                {
+                    cmd.CommandText = "SELECT * from [dbo].[AnagraficaGenerica] where Matricola = @Matricola;";
+
+                    cmd.Connection = sqlCnn;
+
+                    SqlParameter Matricola = new()
+                    {
+                        Value = matricola,
+                        ParameterName = "@Matricola"
+                    };
+
+                    cmd.Parameters.Add(Matricola);
+
+                    using (SqlDataReader reader = cmd.ExecuteReader())   
+                    {
+                        if (reader.Read())
+                        {
+                            return true;
+                        }
+                        else
+                        {
+                            return false;
+                        }
+                    }
+                }
+            } 
+            catch(Exception ex)
+            {
+                return false;
+
             }
         }
 
@@ -125,23 +174,24 @@ namespace GestioneDipendenti.Data
                         {
                             Console.Clear();
                             utility.successStyle($"Hai importato correttamente {successImport} dipendenti");
+                            Logger.Info($"Sono stati importati {successImport} dipendenti dal database");
                         }
                         else
                         {
                             Console.Clear();
                             utility.errorStyle("Non hai importato nessun dipendente");
+                            Logger.Error("è stato importato un file vuoto");
                         }
 
                     }
 
                 }
-                
-                Logger.Info("Importatazione tramite database");
             } 
             catch(Exception ex)
             {
-                Logger.Error($"L'importazione del db ha riscontrato un errore: {ex}");
-                throw;
+                utility.errorStyle("Abbiamo riscontrato un problema con il database");
+                Console.WriteLine($"Errore: {ex}");
+                Logger.Error(ex);
             }
         }
 
@@ -201,6 +251,52 @@ namespace GestioneDipendenti.Data
                 Logger.Error($"L'importazione del db ha riscontrato un errore: {ex}");
                 throw;
             }
+        }
+
+        public void updateEmployeesInDb(string matricola, string newValue, string columnToUpdate)
+        {
+            CheckDb();
+
+            SqlTransaction transaction = null;
+            try
+            {
+                transaction = sqlCnn.BeginTransaction();
+
+
+                using(SqlCommand cmd = new())
+                {
+                    cmd.CommandText = $"UPDATE [dbo].[AnagraficaGenerica] SET {columnToUpdate} = @NewValue WHERE Matricola = @Matricola";
+                    cmd.Connection = sqlCnn;
+                    cmd.Transaction = transaction;
+                    SqlParameter upMatricola = new()
+                    {
+                        Value = matricola,
+                        ParameterName = "@Matricola"
+                    };
+                    SqlParameter NewValue = new()
+                    {
+                        Value = newValue,
+                        ParameterName = "@NewValue"
+                    };
+
+                    cmd.Parameters.Add(upMatricola);
+                    cmd.Parameters.Add(NewValue);
+
+                    cmd.ExecuteNonQuery();
+
+                    transaction.Commit();
+
+                }
+
+            } 
+            catch(Exception ex)
+            {
+                utility.errorStyle("Abbiamo riscontrato un problema con l'aggiornamento del dato");
+                Console.WriteLine($"Errore: {ex}");
+                Logger.Error(ex);
+            }
+
+
         }
     }
 }

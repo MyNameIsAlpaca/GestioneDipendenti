@@ -37,7 +37,7 @@ namespace GestioneDipendenti
             {
                 utility.titleStyle("Benvenuto");
 
-                Console.WriteLine("Scegli cosa vuoi fare\n1) Importa dati\n2) Visualizza dati importati\n3) Seleziona dati specifici\n4) Gestione dipendenti\n5) Serializza tutti i dati in JSON\n6) Esci");
+                Console.WriteLine("Scegli cosa vuoi fare\n1) Importa dati\n2) Visualizza dati importati\n3) Seleziona dati specifici\n4) Gestione dipendenti\n5) Serializza tutti i dati in JSON\n6) Aggiornamento DataBase\n7) Esci");
 
                 string userChoose = Console.ReadLine();
 
@@ -221,6 +221,33 @@ namespace GestioneDipendenti
                         utility.successStyle("Esportazione completata");
                         break;
                     case "6":
+                        Console.Clear();
+                        utility.titleStyle("Aggiornamento Database");
+                        while (!close)
+                        {
+                        Console.WriteLine("Cosa desideri fare?\n1) Modifica dipendente\n2) Elimina dipendente\n Oppure F per uscire");
+                            switch (Console.ReadLine().ToLower())
+                            {
+                                case "1":
+                                    employeerManager.editEmployeeInDb();
+                                    break;
+                                case "2":
+                                    Console.Clear();
+                                    Console.WriteLine("Sei nell'elimina");
+                                    break;
+                                case "f":
+                                    Console.Clear();
+                                    close = true;
+                                    break;
+                                default:
+                                    Console.Clear();
+                                    utility.errorStyle("Scegli un'opzione valida");
+                                    break;
+                            }
+                        }
+                        close = false;
+                        break;
+                    case "7":
                         Console.Clear();
                         close = true;
                         break;
