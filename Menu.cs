@@ -233,7 +233,7 @@ namespace GestioneDipendenti
                                     break;
                                 case "2":
                                     Console.Clear();
-                                    Console.WriteLine("Sei nell'elimina");
+                                    employeerManager.deleteEmployeeInDb();
                                     break;
                                 case "f":
                                     Console.Clear();

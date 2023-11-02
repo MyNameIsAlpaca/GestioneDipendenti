@@ -8,13 +8,15 @@ using System.Threading.Channels;
 using System.Threading.Tasks;
 using UtilityLib;
 using System.Configuration;
-
+using NLog;
 
 namespace GestioneDipendenti.Data
 {
     internal class EmployeerManager
     {
-            DbManager dbManager = new DbManager(ConfigurationManager.AppSettings["CnnDbString"]);
+        private static readonly NLog.Logger Logger = NLog.LogManager.GetCurrentClassLogger();
+
+        DbManager dbManager = new DbManager(ConfigurationManager.AppSettings["CnnDbString"]);
 
         Utility utility = new UtilityLib.Utility();
 
@@ -50,6 +52,57 @@ namespace GestioneDipendenti.Data
             Console.Clear();
         }
 
+        public void deleteEmployeeInDb()
+        {
+            bool close = false;
+
+            Console.Clear();
+
+            utility.titleStyle("Elimina dipendente dal database");
+
+            while (!close)
+            {
+                utility.insertStyle("Inserisci la matricola del dipendente che desideri eliminare");
+
+                string matricola = Console.ReadLine();
+
+                if (dbManager.checkEmployeeInDb(matricola))
+                {
+                    Console.Clear();
+                    while (!close)
+                    {
+                        utility.errorStyle($"Attenzione! Sei sicuro di voler eliminare il dipendente {matricola}?");
+                        Console.WriteLine("1) Si\n2) No");
+                        switch (Console.ReadLine())
+                        {
+                            case "1":
+                                Console.Clear();
+                                dbManager.deleteEmployeesFromDb(matricola);
+                                Logger.Info($"È stato eliminato il dipendente {matricola}");
+                                utility.successStyle("Eliminazione avvenuta con successo");
+                                close = true;
+                                break;
+                            case "2":
+                                Console.Clear();
+                                close = true;
+                                break;
+                            default:
+                                Console.Clear();
+                                utility.errorStyle("Scegli un'opzione valida");
+                                break;
+                        }
+                    }
+                }
+                else
+                {
+                    Console.Clear();
+                    utility.errorStyle("Non è presente nessun dipendente con quella matricola nel database");
+                }
+            }
+            close = false;
+
+        }
+
         public void editEmployeeInDb()
         {
             bool close = false;
@@ -57,10 +110,12 @@ namespace GestioneDipendenti.Data
             utility.titleStyle("Modifica dipendente");
             while (!close)
             {
-                Console.WriteLine("Inserisci la matricola del dipendente da modificare\nOppure F per uscire");
+                utility.insertStyle("Inserisci la matricola del dipendente da modificare");
+                Console.WriteLine("Oppure F per uscire");
                 string matricola = Console.ReadLine().ToUpper();
                 if (matricola == "F")
                 {
+                    Console.Clear();
                     close = true;
                     break;
                 }
@@ -82,19 +137,21 @@ namespace GestioneDipendenti.Data
                             {
                                 case "1":
                                     Console.Clear();
-                                    Console.WriteLine("Inserisci il nome aggiornato");
+                                    utility.insertStyle("Inserisci il nome aggiornato");
                                     string name = Console.ReadLine();
                                     dbManager.updateEmployeesInDb(matricola, name, "Nominativo");
                                     Console.Clear();
                                     utility.successStyle("Nome dipendente aggiornato con successo");
+                                    Logger.Info($"È stato modificato il nome del dipendente {matricola} in {name}");
                                     close = true;
                                     break;
                                 case "2":
                                     Console.Clear();
-                                    Console.WriteLine("Inserisci l'età aggiornato");
+                                    utility.insertStyle("Inserisci l'età aggiornato");
                                     string age = Console.ReadLine();
                                     dbManager.updateEmployeesInDb(matricola, age, "Eta");
                                     Console.Clear();
+                                    Logger.Info($"È stata aggiornata l'età del dipendente {matricola} in {age}");
                                     utility.successStyle("Età del dipendente aggiornata con successo");
                                     close = true;
                                     break;
@@ -107,17 +164,19 @@ namespace GestioneDipendenti.Data
                                         {
                                             case "1":
                                                 Console.Clear();
-                                                Console.WriteLine("Inserisci l'indirizzo aggiornato");
+                                                utility.insertStyle("Inserisci l'indirizzo aggiornato");
                                                 string address = Console.ReadLine();
                                                 dbManager.updateEmployeesInDb(matricola, address, "Indirizzo");
                                                 close = true;
                                                 Console.Clear();
+                                                Logger.Info($"È stato modificato l'indirizzo del dipendente {matricola} in {address}");
                                                 utility.successStyle("Indirizzo aggiornato con successo");
                                                 break;
                                             case "2":
                                                 Console.Clear();
-                                                Console.WriteLine("Inserisci la città aggiornato");
+                                                utility.insertStyle("Inserisci la città aggiornato");
                                                 string city = Console.ReadLine();
+                                                Logger.Info($"È stata aggiornata la città del dipendente {matricola} in {city}");
                                                 dbManager.updateEmployeesInDb(matricola, city, "Citta");
                                                 close = true;
                                                 Console.Clear();
@@ -125,20 +184,22 @@ namespace GestioneDipendenti.Data
                                                 break;
                                             case "3":
                                                 Console.Clear();
-                                                Console.WriteLine("Inserisci la provincia aggiornata");
+                                                utility.insertStyle("Inserisci la provincia aggiornata");
                                                 string province = Console.ReadLine();
                                                 dbManager.updateEmployeesInDb(matricola, province, "Provincia");
                                                 close = true;
                                                 Console.Clear();
+                                                Logger.Info($"È stata aggiornata la provincia del dipendente {matricola} in {province}");
                                                 utility.successStyle("Provincia aggiornata con successo");
                                                 break;
                                             case "4":
                                                 Console.Clear();
-                                                Console.WriteLine("Inserisci il cap aggiornato");
+                                                utility.insertStyle("Inserisci il cap aggiornato");
                                                 string cap = Console.ReadLine();
                                                 dbManager.updateEmployeesInDb(matricola, cap, "Cap");
                                                 close = true;
                                                 Console.Clear();
+                                                Logger.Info($"È stato aggiornato il cap del dipendente {matricola} in {cap}");
                                                 utility.successStyle("Cap aggiornato con successo");
                                                 break;
                                             default:
@@ -150,29 +211,31 @@ namespace GestioneDipendenti.Data
                                     break;
                                 case "4":
                                     Console.Clear();
-                                    Console.WriteLine("Inserisci il ruolo aggiornato");
+                                    utility.insertStyle("Inserisci il ruolo aggiornato");
                                     string ruolo = Console.ReadLine();
                                     dbManager.updateEmployeesInDb(matricola, ruolo, "Ruolo");
                                     Console.Clear();
+                                    Logger.Info($"È stata aggiornato il ruolo del dipendente {matricola} in {ruolo}");
                                     utility.successStyle("Ruolo dipendente aggiornato con successo");
                                     close = true;
                                     break;
                                 case "5":
                                     Console.Clear();
-                                    Console.WriteLine("Inserisci il reparto aggiornato");
+                                    utility.insertStyle("Inserisci il reparto aggiornato");
                                     string reparto = Console.ReadLine();
                                     dbManager.updateEmployeesInDb(matricola, reparto, "Reparto");
                                     Console.Clear();
+                                    Logger.Info($"È stata aggiornato il reparto del dipendente {matricola} in {reparto}");
                                     utility.successStyle("Reparto dipendente aggiornato con successo");
                                     close = true;
                                     break;
                                 case "6":
                                     Console.Clear();
-                                    Console.WriteLine("Inserisci il numero di telefono aggiornato");
+                                    utility.insertStyle("Inserisci il numero di telefono aggiornato");
                                     while (!close)
                                     {
                                         string numero = Console.ReadLine();
-                                        if (!utility.testInt(numero) || numero.Length < 10 || numero.Length > 13)
+                                        if (!utility.testInt(numero) || numero.Length < 9 || numero.Length > 13)
                                         {
                                             Console.Clear();
                                             utility.errorStyle("Inserisci un numero valido");
@@ -181,6 +244,7 @@ namespace GestioneDipendenti.Data
                                         {
                                             dbManager.updateEmployeesInDb(matricola, numero, "Telefono");
                                             Console.Clear();
+                                            Logger.Info($"È stata aggiornato il numero di telefono del dipendente {matricola} in {numero}");
                                             utility.successStyle("Numero di telefono del dipendente aggiornato con successo");
                                             close = true;
                                         }
@@ -372,6 +436,7 @@ namespace GestioneDipendenti.Data
                             Console.Clear();
                             var itemToRemove = employeesList.Single(r => r.EmployeesId.ToLower() == userSearch);
                             employeesList.Remove(itemToRemove);
+                            
                             utility.errorStyle("Dipendente eliminato con successo");
                             close = true;
                             break;

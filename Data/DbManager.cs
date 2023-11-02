@@ -132,6 +132,7 @@ namespace GestioneDipendenti.Data
                             if(EmployeesNeedAdd != null)
                             {
                                 Console.Clear();
+                                Logger.Error($"Tentativo di aggiunta del dipendente {id} il quale era già stato aggiunto");
                                 utility.errorStyle($"Il dipendente con matricola {id} è già presente nel database");
                                 Console.ReadLine();
                             }
@@ -241,6 +242,7 @@ namespace GestioneDipendenti.Data
                     else
                     {
                         Console.Clear();
+                        Logger.Error("è stato importato un file vuoto di attività dipendenti");
                         utility.errorStyle("Non hai importato nessuna attivita");
                     }
 
@@ -297,6 +299,33 @@ namespace GestioneDipendenti.Data
             }
 
 
+        }
+        
+        public void deleteEmployeesFromDb(string matricola)
+        {
+            CheckDb();
+            try
+            {
+                using(SqlCommand cmd = new())
+                {
+                    cmd.CommandText = "DELETE FROM [dbo].[AnagraficaGenerica] WHERE Matricola = @Matricola";
+                    cmd.Connection = sqlCnn;
+                    SqlParameter delMatricola = new()
+                    {
+                        Value = matricola,
+                        ParameterName = "@Matricola"
+                    };
+
+                    cmd.Parameters.Add(delMatricola);
+
+                    cmd.ExecuteNonQuery();
+                }
+
+            }catch(Exception ex)
+            {
+                Console.WriteLine($"L'eliminazione ha riscontrato il seguente errore: {ex}");
+                Logger.Error(ex);
+            }
         }
     }
 }
