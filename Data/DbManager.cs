@@ -104,7 +104,7 @@ namespace GestioneDipendenti.Data
             catch(Exception ex)
             {
                 return false;
-
+                Logger.Error(ex.Message);
             }
         }
 
@@ -158,15 +158,31 @@ namespace GestioneDipendenti.Data
 
                                 string[] nameSplit = fullName.Split(' ');
 
-                                string firstName = nameSplit[0];
+                                if(nameSplit.Length >= 2) 
+                                {
+                                    string firstName = nameSplit[0];
 
-                                string lastName = nameSplit[1];
+                                    string lastName = nameSplit[1];
 
-                                Employees employees = new Employees(firstName, lastName, eta, indirizzo, citta, provincia, cap, telefono, id, reparto, ruolo);
+                                    Employees employees = new Employees(firstName, lastName, eta, indirizzo, citta, provincia, cap, telefono, id, reparto, ruolo);
 
-                                successImport++;
+                                    successImport++;
 
-                                employeesList.Add(employees);
+                                    employeesList.Add(employees);
+                                }
+                                else
+                                {
+                                    string firstName = nameSplit[0];
+                                    string lastName = string.Empty;
+
+                                    Employees employees = new Employees(firstName, lastName, eta, indirizzo, citta, provincia, cap, telefono, id, reparto, ruolo);
+
+                                    successImport++;
+
+                                    employeesList.Add(employees);
+                                }
+
+
 
                             }
 
